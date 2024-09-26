@@ -1,5 +1,4 @@
 from launch import LaunchDescription
-from launch_ros.actions import Node
 from ament_index_python import get_package_share_directory
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
@@ -10,6 +9,11 @@ import yaml
 
 def generate_launch_description():
     namespace = LaunchConfiguration('namespace')
+
+    namespace_launch_arg = DeclareLaunchArgument(
+        'namespace',
+        default_value='astra'
+    )
     params_file = get_package_share_directory(
         "astra_camera") + "/params/astra_mini_params.yaml"
     with open(params_file, 'r') as file:
@@ -35,4 +39,6 @@ def generate_launch_description():
                            name='point_cloud_xyzrgb')
         ],
         output='screen')
-    return LaunchDescription([container])
+    return LaunchDescription([namespace_launch_arg,
+                              container
+                              ])
